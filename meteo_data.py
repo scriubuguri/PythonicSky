@@ -5,63 +5,76 @@
 import json
 import requests
 
-from utils import FULL_URL, get_date_and_time
+
+#function to get weather data
+def get_weather(city, units, param):
+    API_KEY = "your_api_key":
+    FULL_URL = "https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units={units}".format(
+        city=city,
+        api_key=API_KEY,
+        units=units
+    )
+
+    response = requests.get(FULL_URL)
+    if response.status_code == 200:
+        weather_data = response.json()
+        return weather_data
+    else:
+        print("Error encountered when calling the weather API")
 
 
-# interogate the API
-response = requests.get(FULL_URL)
+#functions to print weather's parameters
+def temp_funct(city, units, param):
+    final_data = get_weather(city, units, param)
+    if final_data:
+        current_temp = int(final_data['main']['temp'])
+        print("-Current temperature: {temp} C".format(temp=current_temp))
+    else:
+        print("Error fetching data")
 
-if response.status_code == 200:
-    weather_data = response.json()
+def wind_funct(city, units, param):
+    final_data = get_weather(city, units, param)
+    if final_data:
+        wind_speed = int(final_data['wind']['speed'])
+        print("-Wind speed: {speed} m/s".format(speed=wind_speed))
+    else:
+        print("Error fetching data")
 
-    menu_structure = [
-        "--- Bucharest weather data --- ",
-        "Date: {date_and_time}".format(date_and_time=get_date_and_time(weather_data['dt'])),
-        "a) Temperature",
-        "b) Cloudiness and visibility",
-        "c) Humidity and pressure",
-        "d) Wind",
-        "q) Quit"
-    ]
-    print("\n".join(menu_structure))
+def humidity_funct(city, units, param):
+    final_data = get_weather(city, units, param)
+    if final_data:
+        humidity = int(final_data['main']['humidity'])
+        print("-Humidity: {humidity} %".format(humidity=humidity))
+    else:
+        print("Error fetching data")
 
-    while True:
-        selected_option = input("Please select an option from a to d:")
-        if selected_option == "a":
-            rasp_a = [
-                "-Current temperature: {current_temp} C".format(current_temp=weather_data['main']['temp']),
-                "-Real feel: {real_feel} C".format(real_feel=weather_data['main']['feels_like']),
-                "-Max temperature: {max_temp} C".format(max_temp=weather_data['main']['temp_max']),
-                "-Min temperature: {min_temp} C".format(min_temp=weather_data['main']['temp_min'])
-            ]
-            print("\n"+"The required information are: "+"\n"+"\t"+rasp_a[0]+"\n"+"\t"+rasp_a[1]+"\n"+"\t"
-                  +rasp_a[2]+"\n"+"\t"+rasp_a[3]+"\n")
-            print("\n".join(menu_structure))
+def clouds_funct(city, units, param):
+    final_data = get_weather(city, units, param)
+    if final_data:
+        clouds = int(final_data['clouds']['all'])
+        print("-Cloudiness: {clouds} %".format(clouds=clouds))
+    else:
+        print("Error fetching data")
 
-        elif selected_option == "b":
-            rasp_b = ["-Cloudiness: {clouds} %".format(clouds=weather_data['clouds']['all']),
-                      "-Visibility: {visibility} m".format(visibility=weather_data['visibility'])]
-            print("\n"+"The required information are: " +"\n"+"\t"+rasp_b[0]+"\n"+"\t"+rasp_b[1]+"\n")
-            print("\n".join(menu_structure))
+#main function to call all the functions above  
+def main():
+    parser = argparse.ArgumentParser(description="Get weather information for a city.")
+    parser.add_argument("-c", default="Bucharest", help="City name")
+    parser.add_argument("-u", choices=["metric", "imperial", "standard"], default="metric", help="Temperature units (default: metric)")
+    parser.add_argument("-p", choices=["t", "w", "h", "c"], default="t", help="Weather parameter (default: t)")
 
-        elif selected_option == "c":
-            rasp_c = ["-Humidity: {humidity} %".format(humidity=weather_data['main']['humidity']),
-                      "-Pressure: {pressure} mmHg".format(pressure=weather_data['main']['pressure'])]
-            print("\n"+"The required information are: " +"\n"+"\t"+rasp_c[0]+"\n"+"\t"+rasp_c[1]+"\n")
-            print("\n".join(menu_structure))
+    args = parser.parse_args()
 
-        elif selected_option == "d":
-            rasp_d = ["-Wind speed: {speed} m/s".format(speed=weather_data['wind']['speed']),
-                      "-Wind direction: {deg} degrees".format(deg=weather_data['wind']['deg'])]
-            print("\n"+"The required information are: " +"\n"+"\t"+rasp_d[0]+"\n"+"\t"+rasp_d[1]+"\n")
-            print("\n".join(menu_structure))
-        elif selected_option == "q":
-            break
-        else:
-            print("\n"+"Your selected option is not valid. \tPlease select a letter from a to d."+"\n")
-            print("\n".join(menu_structure))
-            selected_option = input("Please select an option from a to d:")
+    if args.p == "t":
+        temp_funct(args.c, args.u, args.p)
+    elif args.p == "w":
+        wind_funct(args.c, args.u, args.p)
+    elif args.p == "h":
+        humidity_funct(args.c, args.u, args.p)
+    elif args.p == "c":
+        clouds_funct(args.c, args.u, args.p)
 
-else:
-    weather_data = None
-    print("Error encountered when calling the weather API: {err}".format(err=response.text))
+if __name__ == "__main__":
+    main()
+
+
