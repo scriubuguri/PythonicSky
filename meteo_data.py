@@ -5,11 +5,16 @@
 import json
 import requests
 import argparse
+import os
 
 
 #function to get weather data
 def get_weather(city, units, param):
-    API_KEY = "your_api_key"
+    if 'weather_data_key' in os.environ:
+        API_KEY = os.environ['weather_data_key']
+    else:
+        API_KEY = "your_api_key"
+
     FULL_URL = "https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units={units}".format(
         city=city,
         api_key=API_KEY,
