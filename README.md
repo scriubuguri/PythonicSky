@@ -8,6 +8,7 @@ This program allows you to retrieve weather details and forecasts for a specific
 - Retrieve weather data for a city using the OpenWeatherMap API.
 - Specify the temperature units (metric, imperial, or standard).
 - Choose the weather parameter to display (temperature, wind speed, humidity, or cloudiness).
+- Supports verbose mode, which provides additional information in the output.
 
 ## Requirements
 
@@ -38,14 +39,14 @@ git clone https://github.com/scriubuguri/meteodata.git
 Run the program using the following command:
 
 ```bash
-python meteo_data.py [-c <city>] [-u <units>] [-p <parameter>]
+python meteo_data.py [-c <city>] [-u {metric,imperial,standard}] [-p {t,w,h,c}] [-v]
 ```
 
 or  
 
 ```bash
 chmod +x meteo_data.py
-./meteo_data.py [-c <city>] [-u <units>] [-p <parameter>]
+./meteo_data.py [-c <city>] [-u {metric,imperial,standard}] [-p {t,w,h,c}] [-v]
 ```
 
 The available options are:
@@ -53,6 +54,7 @@ The available options are:
 - `-c <city>`: Specify the name of the city for which you want to retrieve weather information. If not provided, the default city is "Bucharest".
 - `-u <units>`: Specify the temperature units to display. Available options are "metric" (Celsius), "imperial" (Fahrenheit), and "standard" (Kelvin). The default unit is "metric".
 - `-p <parameter>`: Specify the weather parameter to display. Available options are "t" (temperature), "w" (wind speed), "h" (humidity), and "c" (cloudiness). The default parameter is "t".
+- `-v`: Enable verbose mode. Additional information will be displayed in the output.
 
 ## Example
 
@@ -61,9 +63,9 @@ The available options are:
 python meteo_data.py -c Pitesti -u metric -p t
 ```
 
-- Retrieve the wind speed for Timisoara in miles per hour:
+- Retrieve the wind speed for Timisoara in miles per hour with verbose mode:
 ```bash
-python meteo_data.py -c "Timisoara" -u imperial -p w
+python meteo_data.py -c "Timisoara" -u imperial -p w -v
 ```
 
 - Retrieve the humidity for Iasi:
@@ -73,7 +75,7 @@ python meteo_data.py -c Iasi -p h
 
 - Retrieve the cloudiness for Ploiesti:
 ```bash
-python meteo_data.py -c Ploiesti -p c
+python meteo_data.py -p c -c Ploiesti
 ```
 
 ## Author
