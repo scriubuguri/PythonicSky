@@ -4,11 +4,12 @@
 
 import json
 import requests
+import argparse
 
 
 #function to get weather data
 def get_weather(city, units, param):
-    API_KEY = "your_api_key":
+    API_KEY = "your_api_key"
     FULL_URL = "https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units={units}".format(
         city=city,
         api_key=API_KEY,
@@ -28,7 +29,12 @@ def temp_funct(city, units, param):
     final_data = get_weather(city, units, param)
     if final_data:
         current_temp = int(final_data['main']['temp'])
-        print("-Current temperature: {temp} C".format(temp=current_temp))
+        if units == "metric":
+            print("-Current temperature: {temp} C".format(temp=current_temp))
+        elif units == "imperial":
+            print("-Current temperature: {temp} F".format(temp=current_temp))
+        elif units == "standard":
+            print("-Current temperature: {temp} K".format(temp=current_temp))
     else:
         print("Error fetching data")
 
