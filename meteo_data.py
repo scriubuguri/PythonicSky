@@ -31,19 +31,16 @@ def get_weather(param):
 
 #functions to print weather's parameters
 def temp_funct(param):
+    
+    system_options = {"metric": "C", "imperial": "F", "standard": "K"}
     final_data = get_weather(param)
     if final_data:
         current_temp = int(final_data['main']['temp'])
-        if param['system'] == "metric":
-            units = "C"
-        elif param['system'] == "imperial":
-            units = "F"
-        elif param['system'] == "standard":
-            units = "K"
-        if param['verbose'] == True:
+        units = system_options.get(param['system'], "")
+
+        ante = ""
+        if param['verbose']:
             ante = "Current temperature in {city} is: ".format(city=param['city']) 
-        elif param['verbose'] == False:
-            ante = ""
 
         print("{ante}{temp} {units}".format(ante=ante, temp=current_temp, units=units))
     else:
